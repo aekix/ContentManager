@@ -21,7 +21,7 @@ services:
     volumes:
       - ./docker/mysql:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: symfonyweb
+      MYSQL_DATABASE: contentManager
       MYSQL_ROOT_PASSWORD: root
 
   phpmyadmin:
