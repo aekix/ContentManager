@@ -31,9 +31,9 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $status;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -112,8 +112,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -157,14 +155,14 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getStatus(): ?string
+    public function getEnabled(): ?string
     {
-        return $this->status;
+        return $this->enabled;
     }
 
-    public function setStatus(string $status): self
+    public function setEnabled(string $enabled): self
     {
-        $this->status = $status;
+        $this->enabled = $enabled;
 
         return $this;
     }
