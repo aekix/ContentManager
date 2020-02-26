@@ -1,7 +1,13 @@
-# Default ignored files
-/.idea
+/vendor
+/public/build
+/node_modules
 /docker
 /var
-/vendor
-.env
-.DS_Store
+/.idea
+/docker/mysql
+/public/bootstrap
+/public/chart.js
+/public/datatables
+/public/fontawesome-free
+/public/jquery
+/public/jquery-easing

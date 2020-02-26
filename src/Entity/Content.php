@@ -27,7 +27,7 @@ class Content
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -88,14 +88,14 @@ class Content
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getEnabled(): ?int
     {
-        return $this->status;
+        return $this->enabled;
     }
 
-    public function setStatus(int $status): self
+    public function setEnabled(int $enabled): self
     {
-        $this->status = $status;
+        $this->enabled = $enabled;
 
         return $this;
     }
