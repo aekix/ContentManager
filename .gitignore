@@ -5,3 +5,9 @@
 /var
 /.idea
 /docker/mysql
+/public/bootstrap
+/public/chart.js
+/public/datatables
+/public/fontawesome-free
+/public/jquery
+/public/jquery-easing
