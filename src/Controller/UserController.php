@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @Route("/api/user", name="api_private_user_")
+ * @Route("/user", name="user_")
  */
 class UserController extends AbstractFOSRestController
 {
@@ -30,7 +30,7 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Post("/create", name="create")
+     * @Route("/create", name="create", methods={"GET","POST"})
      */
     public function create(Request $request,ValidatorInterface $validator)
     {
@@ -45,5 +45,48 @@ class UserController extends AbstractFOSRestController
         $this->em->persist($user);
         $this->em->flush();
         return $this->view($user);
+    }
+
+    /**
+     * @Route("/{id}", name="get")
+     */
+    public function  getById(User $user)
+    {
+        return $this->view($user);
+    }
+
+    /**
+     * @Route("/update/{id}", name="update")
+     */
+    public function update(User $user, Request $request)
+    {
+        $user->setLastname($request->get('lastname') ?? $user->getLastname());
+        $user->setFirstname($request->get('firstname') ?? $user->getFirstname());
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $request->get('password')?? $user->getPassword()));
+        $user->setMail($request->get('mail') ?? $user->getMail());
+        $user->setEnabled($request->get('enabled') ?? $user->getEnabled());
+        $user->setRoles($request->get('roles') ?? $user->getRoles());
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->view($user);
+    }
+
+    /**
+     * @Route("/delete/{id}", name="delete")
+     */
+    public function delete(User $user)
+    {
+        $user->setEnabled(1);
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->view($user);
+    }
+
+    /**
+     * @Route("/", name="index")
+     */
+    public function index()
+    {
+        return $this->render('user/index.html.twig');
     }
 }

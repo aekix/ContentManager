@@ -1,17 +1,13 @@
-
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/docker/
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
-
-###> symfony/phpunit-bridge ###
-.phpunit
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
+/vendor
+/public/build
+/node_modules
+/docker
+/var
+/.idea
+/docker/mysql
+/public/bootstrap
+/public/chart.js
+/public/datatables
+/public/fontawesome-free
+/public/jquery
+/public/jquery-easing
