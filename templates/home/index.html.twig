@@ -1,8 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Index{% endblock %}
+{% block stylesheets %}
+            {{ parent() }}
+            {{ encore_entry_link_tags('home') }}
+{% endblock %}
 
 {% block body %}
+
     <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -410,7 +415,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Dernières publications</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -425,10 +430,23 @@
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
-                                    </div>
+                                <div class="card-body table table-hover">
+                                    <table>
+                                        <tr>
+                                            <th style="height: 3vw">Titre</th>
+                                            <th>Auteur</th>
+                                            <th>Date</th>
+                                            <th>Catégorie</th>
+                                        </tr>
+                                      {% for content in contentsOrderByDate %}
+                                        <tr class="publishedContent" id="{{ content.id }}">
+                                            <td style="height: 3vw">{{ content.title }}</td>
+                                            <td>{{ content.author.firstname }} {{ content.author.lastname }}</td>
+                                            <td>{{ content.publicationDate|date('d M yy', 'Europe/Paris')}}</td>
+                                            <td>{{ content.category.label }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -638,4 +656,7 @@
         </div>
     </div>
     </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('home') }}
+    {% endblock %}
 {% endblock %}

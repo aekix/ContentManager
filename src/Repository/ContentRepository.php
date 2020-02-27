@@ -19,6 +19,17 @@ class ContentRepository extends ServiceEntityRepository
         parent::__construct($registry, Content::class);
     }
 
+    public function findHomePublishedContents()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.enabled = 1')
+            ->where('c.status = 1')
+            ->where('c.enabled IS NOT NULL')
+            ->orderBy('c.publicationDate', 'DESC')
+            ->setMaxResults(10);
+        return $qb->getQuery()->execute();
+    }
+
     // /**
     //  * @return Content[] Returns an array of Content objects
     //  */

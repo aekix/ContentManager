@@ -8,8 +8,6 @@ use Doctrine\Persistence\ObjectManager;
 use Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-require_once 'vendor/autoload.php';
-
 class UserFixtures extends Fixture
 {
 
