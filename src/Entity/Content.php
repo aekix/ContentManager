@@ -64,11 +64,17 @@ class Content
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
     public function __construct()
     {
         $this->contentHistories = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->enabled = 1;
     }
 
     public function getId(): ?int
@@ -237,6 +243,18 @@ class Content
                 $comment->setContent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

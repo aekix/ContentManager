@@ -8,12 +8,10 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
 
-require_once 'vendor/autoload.php';
-
 class ContentFixtures extends Fixture implements DependentFixtureInterface
 {
 
-    const MAX_CONTENT = 12;
+    const MAX_CONTENT = 20;
 
     public function load(ObjectManager $manager)
     {
@@ -24,11 +22,13 @@ class ContentFixtures extends Fixture implements DependentFixtureInterface
             $content = new Content();
 
             $content->setAuthor($this->getReference('user_' . random_int(0, UserFixtures::MAX_USER-1)));
-            $content->setPublisher($this->getReference('user_' . random_int(0, 6)));
+            if ($i > 10) {
+                $content->setPublisher($this->getReference('user_' . random_int(0, 6)));
+                $content->setPublicationDate(new \DateTime());
+            }
             $content->setCategory($this->getReference('category_' . random_int(0, CategoryFixtures::MAX_CATEGORIES-1)));
-            $content->setStatus(random_int(0, 7));
+            $content->setStatus(random_int(0, 1));
             $content->setText($faker->text(255));
-            $content->setPublicationDate(new \DateTime());
             $manager->persist($content);
 
             $manager->flush();

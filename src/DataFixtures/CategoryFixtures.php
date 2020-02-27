@@ -7,8 +7,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
 
-require_once 'vendor/autoload.php';
-
 class CategoryFixtures extends Fixture
 {
 
