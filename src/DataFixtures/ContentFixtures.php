@@ -25,14 +25,11 @@ class ContentFixtures extends Fixture implements DependentFixtureInterface
             if ($i > 10) {
                 $content->setPublisher($this->getReference('user_' . random_int(0, 6)));
                 $content->setPublicationDate(new \DateTime());
-                $content->setStatus(1);
             }
-            else{
-                $content->setStatus(0);
-            }
-            $content->setTitle($faker->sentence);
             $content->setCategory($this->getReference('category_' . random_int(0, CategoryFixtures::MAX_CATEGORIES-1)));
+            $content->setStatus(random_int(0, 1));
             $content->setText($faker->text(255));
+            $content->setTitle($faker->sentence);
             $manager->persist($content);
 
             $manager->flush();
