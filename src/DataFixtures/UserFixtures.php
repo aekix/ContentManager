@@ -25,7 +25,7 @@ class UserFixtures extends Fixture
         $faker = Faker\Factory::create('fr_FR');
 
         $user = new User();
-        $user->setRoles(['ROLE_ADMIN']);
+        $user->setRoles(['ROLE_ADMIN', 'ROLE_ASC']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
         $user->setEnabled(1);
         $user->setMail($faker->email);
@@ -36,7 +36,7 @@ class UserFixtures extends Fixture
 
         for ($i = 1; $i < 3; $i++) {
             $user = new User();
-            $user->setRoles(['ROLE_COMM']);
+            $user->setRoles(['ROLE_COM', 'ROLE_ASC']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
             $user->setEnabled(1);
             $user->setMail($faker->email);
@@ -48,7 +48,7 @@ class UserFixtures extends Fixture
 
         for ($i = 3; $i < 6; $i++) {
             $user = new User();
-            $user->setRoles(['ROLE_REVIEW']);
+            $user->setRoles(['ROLE_REVIEWER', 'ROLE_ASC']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
             $user->setEnabled(1);
             $user->setMail($faker->email);
