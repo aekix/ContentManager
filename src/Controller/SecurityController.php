@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\EmailResetType;
+use App\Form\NewPasswordType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +40,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $userRepository->findOneBy(['email' => $form->getData()['email']]);
+            $user = $userRepository->findOneBy(['mail' => $form->getData()->getMail()]);
             if (!$user) {
                 $this->get('session')->getFlashBag()->add(
                     'warning',
@@ -49,6 +51,7 @@ class SecurityController extends AbstractController
             $user->setToken($tokenGenerator->generateToken());
             // enregistrement de la date de création du token
             $user->setPasswordRequestedAt(new \Datetime());
+            $entityManager->persist($user);
             $entityManager->flush();
 
             $message = (new \Swift_Message('Réinitialisation de votre mot de passe'))
@@ -65,7 +68,8 @@ class SecurityController extends AbstractController
                 'message',
                 'Un mail a été envoyé à votre adresse email.'
             );
-            return $this->redirectToRoute("login");
+
+//            return $this->redirectToRoute("login");
 
         }
 
