@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rédiger un contenu{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+    {{ encore_entry_link_tags('content') }}
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-8 col-lg-7">
+                {{ include('content/_form.html.twig') }}
+            </div>
+            <div class=" col-xl-4 col-lg-5">
+                <div class="">
+                    dz
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+        {{ encore_entry_script_tags('content') }}
+
+    {% endblock %}
