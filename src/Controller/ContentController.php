@@ -44,13 +44,15 @@ class ContentController extends AbstractFOSRestController
             $content->setEnabled(1);
             $content->setText($data->getText());
             $content->setCategory($data->getCategory());
-            $content->setStatus(1);
-            $pj = new File();
-            $pj->setFile($form->get('pj')->getData());
-            $pj = $fileService->upload($pj);
-            $pj->setContent($content);
+            $form->get('save')->isClicked() ? $content->setStatus(0):  $content->setStatus(1);
             $this->em->persist($content);
-            $this->em->persist($pj);
+            if ($form->get('pj')->getData()){
+                $pj = new File();
+                $pj->setFile($form->get('pj')->getData());
+                $pj = $fileService->upload($pj);
+                $pj->setContent($content);
+                $this->em->persist($pj);
+            }
             $this->em->flush();
             return $this->redirectToRoute('home');
         }
