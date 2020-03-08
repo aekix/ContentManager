@@ -15,7 +15,6 @@ class HomeController extends AbstractController
     {
 
         $contentsList = $contentRepository->findHomePublishedContents();
-        dump($contentsList);
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',

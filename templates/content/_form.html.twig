@@ -27,6 +27,16 @@
         </div>
     </div>
     </br>
+    <div class="col-lg-12 ">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Pièce jointe</span>
+            </div>
+            {{ form_widget(form.pj, { 'attr': {'class': 'custom-select'} }) }}
+
+        </div>
+    </div>
+    </br>
     <div class="col-lg-12">
         <div class="form-group">
             {{ form_widget(form.text) }}

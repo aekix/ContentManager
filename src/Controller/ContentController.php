@@ -3,15 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Content;
+use App\Entity\File;
 use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 /**
  * @Route("/content", name="content_")
  */
@@ -29,7 +30,7 @@ class ContentController extends AbstractFOSRestController
     /**
      * @Route("/create", name="create")
      */
-    public function create(Request $request, ValidatorInterface $validator)
+    public function create(Request $request, ValidatorInterface $validator, FileService $fileService)
     {
         $form = $this->createForm(NewContentType::class, null);
         $form->handleRequest($request);
@@ -44,7 +45,12 @@ class ContentController extends AbstractFOSRestController
             $content->setText($data->getText());
             $content->setCategory($data->getCategory());
             $content->setStatus(1);
+            $pj = new File();
+            $pj->setFile($form->get('pj')->getData());
+            $pj = $fileService->upload($pj);
+            $pj->setContent($content);
             $this->em->persist($content);
+            $this->em->persist($pj);
             $this->em->flush();
             return $this->redirectToRoute('home');
         }
