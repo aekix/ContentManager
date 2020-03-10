@@ -58,7 +58,8 @@ class ContentController extends AbstractFOSRestController
         }
         return $this->render('content/newContent.html.twig', [
             'form' => $form->createView(),
-        ]);    }
+        ]);
+    }
 
     /**
      * @Route("/{id}", name="byId")
