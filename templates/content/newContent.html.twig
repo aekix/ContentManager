@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rédiger un contenu{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+    {{ encore_entry_link_tags('content') }}
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-8 col-lg-7">
+                {{ include('content/_form.html.twig') }}
+            </div>
+            <div class=" col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Tips</h6>
+                    </div>
+                    <br class="card-body table table-hover">
+                    <div class="col-lg-12">
+                        <ul>
+                            <h3>
+                                <li> Trouvez un titre informatif et percutant. ...</li>
+                                </br></br>
+                                <li> Commencez l'article par une phrase d'accroche. ...</li>
+                                </br></br>
+                                <li> Donnez les informations dans l'ordre chronologique inversé. ...</li>
+                                </br></br>
+                                <li> Soignez l'orthographe. ...</li>
+                                </br></br>
+                                <li> Incluez les souces. ...</li>
+                                </br>
+                            </h3>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+        {{ encore_entry_script_tags('content') }}
+
+    {% endblock %}

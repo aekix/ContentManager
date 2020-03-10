@@ -38,7 +38,7 @@ function browserSyncReload(done) {
 
 // Clean vendor
 function clean() {
-    return del(["./public/bootstrap", "./public/chart.js", "./public/datatables", "./public/fontawesome-free", "./public/jquery", "./public/jquery-easing"]);
+    return del(["./public/bootstrap", "./public/chart.js", "./public/datatables", "./public/fontawesome-free", "./public/jquery", "./public/jquery-easing", "./public/simplemde"]);
 }
 
 // Bring third party dependencies from node_modules into public directory
@@ -65,13 +65,15 @@ function modules() {
     // jQuery Easing
     var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js')
         .pipe(gulp.dest('./public/jquery-easing'));
+    var simplemde = gulp.src('./node_modules/simplemde/dist/*')
+        .pipe(gulp.dest('./public/simplemde/dist'));
     // jQuery
     var jquery = gulp.src([
         './node_modules/jquery/dist/*',
         '!./node_modules/jquery/dist/core.js'
     ])
         .pipe(gulp.dest('./public/jquery'));
-    return merge(bootstrapJS, bootstrapSCSS, chartJS, dataTables, fontAwesome, jquery, jqueryEasing);
+    return merge(bootstrapJS, bootstrapSCSS, chartJS, dataTables, fontAwesome, jquery, jqueryEasing, simplemde);
 }
 
 // CSS task

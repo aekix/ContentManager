@@ -3,16 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Content;
+use App\Entity\File;
+use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 /**
- * @Route("/api/content", name="api_private_content_")
+ * @Route("/content", name="content_")
  */
 class ContentController extends AbstractFOSRestController
 {
@@ -28,21 +30,39 @@ class ContentController extends AbstractFOSRestController
     /**
      * @Route("/create", name="create")
      */
-    public function create(Request $request, ValidatorInterface $validator)
+    public function create(Request $request, ValidatorInterface $validator, FileService $fileService)
     {
-        $content = new Content();
+        $form = $this->createForm(NewContentType::class, null);
+        $form->handleRequest($request);
 
-        $content->setAuthor($this->getUser());
-        $content->setEnabled(1);
-        $content->setText($request->get('text'));
-        $content->setCategory($request->get('lastname'));
-        $this->em->persist($content);
-        $this->em->flush();
-        return $this->view($content);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $content = new Content();
+
+            $content->setAuthor($this->getUser());
+            $content->setTitle($data->getTitle());
+            $content->setEnabled(1);
+            $content->setText($data->getText());
+            $content->setCategory($data->getCategory());
+            $form->get('save')->isClicked() ? $content->setStatus(0):  $content->setStatus(1);
+            $this->em->persist($content);
+            if ($form->get('pj')->getData()){
+                $pj = new File();
+                $pj->setFile($form->get('pj')->getData());
+                $pj = $fileService->upload($pj);
+                $pj->setContent($content);
+                $this->em->persist($pj);
+            }
+            $this->em->flush();
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('content/newContent.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}", name="get")
+     * @Route("/{id}", name="byId")
      */
     public function  getById(Content $content)
     {
