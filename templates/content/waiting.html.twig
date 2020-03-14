@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-12 col-lg-7">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Articles en attente</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body table table-hover">
+                <table>
+                    <tr>
+                        <th></th>
+                        <th style="height: 3vw">Titre</th>
+                        <th>Auteur</th>
+                        <th>Date</th>
+                        <th>Catégorie</th>
+                        <th><i class="fas fa-check"></i></th>
+                        <th><i class="fas fa-times"></i></th>
+                    </tr>
+                    {% for content in contents %}
+                        <tr class="waitingContent" id="{{ content.id }}">
+                            <td style="color: #00e600">{% if content not in app.user.getContentReviewed() %}New{% endif %}</td>
+                            <td style="height: 3vw">{{ content.title }}</td>
+                            <td>{{ content.author.firstname }} {{ content.author.lastname }}</td>
+                            <td>{{ content.publicationDate|date('d M yy', 'Europe/Paris') }}</td>
+                            <td>{{ content.category.label }}</td>
+                            <td>{{ content.getNbApproval() }}</td>
+                            <td>{{ content.getReviews()|length - content.getNbApproval() }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+    {% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ action }} un contenu{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+    {{ encore_entry_link_tags('content') }}
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {% for message in  app.session.flashbag.get('message') %}
+            <p style="color: forestgreen; text-align: center">{{ message }}</p>
+        {% endfor %}
+        <div class="row">
+            <div class="col-4 text-left">
+                <a href="{{ path('content_waiting') }}" class="btn btn-sm btn-primary">Retour</a>
+            </div>
+            <div style="color: forestgreen; text-align: center">
+                {% for message in  app.session.flashbag.get('message') %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+        <div class="row d-flex flex-row">
+            <div class="col-xl-10 col-lg-12">
+                {{ include('content/_edit.html.twig') }}
+            </div>
+            <div class="col-xl-2 col-lg-2">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Approbation</h6>
+                    </div>
+                    <br class="card-body table table-hover">
+                    <span class="text-center"><i class="fas fa-check nb_approval"
+                                                 style="font-size:30px !important; color: forestgreen">{{ content.getNbApproval() }}      </i> <i
+                                class="fas fa-times nb_refused"
+                                style="font-size:30px !important; color: red">{{ content.getReviews()|length - content.getNbApproval() }}</i></span>
+                    <hr>
+                    <span style="display: {% if review %}block;{% else %} none;{% endif %}color: {% if review and review.accepted %}forestgreen{% else %}red{% endif %}"
+                          class="text-center alreadyReview"> Vous avez déjà review ce contenu.</span>
+                    <hr>
+                    <button type="button" class="btn btn-success approval"
+                            style="background-color: forestgreen !important;">
+                        Approuver
+                    </button>
+                    <button type="button" class="btn btn-danger refuse">Décliner</button>
+                    <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+        {{ encore_entry_script_tags('content') }}
+
+    {% endblock %}
