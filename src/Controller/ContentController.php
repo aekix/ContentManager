@@ -127,6 +127,29 @@ class ContentController extends AbstractFOSRestController
         $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
         return (new JsonResponse($response));
     }
+    /**
+     * @Route("/publier/{id}", name="publier")
+     */
+    public function publier(Content $content)
+    {
+        $content->setPublisher($this->getUser());
+        $content->setPublicationDate(new \DateTime());
+        $this->em->persist($content);
+        $this->em->flush();
+        return $this->redirectToRoute('content_waiting');
+    }
+
+    /**
+     * @Route("/refuser/{id}", name="refuser")
+     */
+    public function refuser(Content $content)
+    {
+        $content->setPublisher($this->getUser());
+        $this->em->persist($content);
+        $this->em->flush();
+        return $this->redirectToRoute('content_waiting');
+    }
+
 
     /**
      * @Route("/{id}", name="byId")
