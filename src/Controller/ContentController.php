@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Content;
 use App\Entity\File;
 use App\Entity\Review;
@@ -102,6 +103,38 @@ class ContentController extends AbstractFOSRestController
         $response['yes'] = $content->getNbApproval();
         $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
         return (new JsonResponse($response));
+    }
+
+
+    /**
+     * @Route("/comment", name="comment", methods="POST")
+     */
+    public function addComment(ContentRepository $contentRepository, Request $request)
+    {
+        $content = $contentRepository->find($request->get('idContent'));
+        if ($request->get('text')) {
+
+            $user = $this->getUser();
+            $comment = new Comment();
+            $comment->setText($request->get('text'));
+            $comment->setUser($user);
+            $comment->setContent($content);
+            $comment->setPublishAt(new \DateTime());
+            $this->em->persist($comment);
+            $this->em->flush();
+        }
+        $comments = $content->getComments();
+        $aComment = [];
+        foreach ($comments as $comment) {
+            $aComment[] = [
+                'id' => $comment->getId(),
+                'text' => $comment->getText(),
+                'lastname' => $comment->getUser()->getLastname(),
+                'firstname' =>$comment->getUser()->getFirstname(),
+                'date' => date_format($comment->getPublishAt(), 'd/m/Y H:i:s'),
+            ];
+        }
+        return (new JsonResponse($aComment));
     }
 
     /**

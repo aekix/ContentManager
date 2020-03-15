@@ -1,4 +1,4 @@
-import '../css/home.css';
+import '../css/content.css';
 
 import $ from 'jquery'
 
@@ -11,38 +11,3 @@ $('.btn').on('click', function () {
     $('#new_content_text').val(simplemde.value());
 })
 
-$('.approval').on('click', function () {
-    var id = $('#idContent').val();
-    $.ajax({
-        url : '/content/approval',
-        method : 'POST',
-        data : {id : id}
-    }).done(function (response) {
-        $('.nb_approval').html(response['yes']);
-        $('.nb_refused').html(response['no']);
-    })
-    if ($('.alreadyReview')) {
-        $('.alreadyReview').css('color', 'forestgreen');
-        $('.alreadyReview').css('display', 'block');
-        $('.alreadyReview').html('Vous avez approuver ce contenu');
-
-    }
-})
-
-$('.refuse').on('click', function () {
-    var id = $('#idContent').val();
-    $.ajax({
-        url : '/content/refuse',
-        method : 'POST',
-        data : {id : id}
-    }).done(function (response) {
-        $('.nb_approval').html(response['yes']);
-        $('.nb_refused').html(response['no']);
-    })
-
-    if ($('.alreadyReview')) {
-        $('.alreadyReview').css('color', 'red');
-        $('.alreadyReview').css('display', 'block');
-        $('.alreadyReview').html('Vous avez décliné ce contenu');
-    }
-})
