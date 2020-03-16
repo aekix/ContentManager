@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
             $password = $passwordEncoder->encodePassword($user,$user->getPassword());
             $user->setPassword($password);
             $user->setEnabled(1);
-            $user->setRoles(['ROLES_USER']);
+            $user->setRoles(['ROLE_USER']);
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
