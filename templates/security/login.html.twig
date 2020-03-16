@@ -1,7 +1,18 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Log in!{% endblock %}
-
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Log in!{% endblock %}
+    </title>
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/brand/favicon.png" type="image/png">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    <link rel="stylesheet" href="/nucleo/css/nucleo.css" type="text/css">
+    <link rel="stylesheet" href="/fontawesome-free/css/all.min.css" type="text/css">
+    <!-- Argon CSS -->
+    <link rel="stylesheet" href="/assets/css/argon.css?v=1.2.0" type="text/css">
+</head>
 {% block body %}
     <body class="bg-default">
     <div class="main-content">
@@ -36,6 +47,12 @@
                                 {% if error %}
                                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                 {% endif %}
+                                {% for message in  app.session.flashbag.get('message') %}
+                                    <p style="color: forestgreen; text-align: center">{{ message }}</p>
+                                {% endfor %}
+                                {% for message in  app.session.flashbag.get('warning') %}
+                                    <p style="color: red; text-align: center">{{ message }}</p>
+                                {% endfor %}
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
                                         <div class="input-group-prepend">
@@ -62,7 +79,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <a href="#" class="text-light"><small>Mot de passe oublié?</small></a>
+                            <a href="{{ path('forgetPassword') }}" class="text-light"><small>Mot de passe oublié?</small></a>
                         </div>
                         <div class="col-6 text-right">
                             <a href="{{ path('register') }}" class="text-light"><small>Pas encore inscrit?</small></a>
@@ -98,3 +115,4 @@
     </div>
     </body>
 {% endblock %}
+</html>

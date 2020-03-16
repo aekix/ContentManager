@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -74,6 +75,16 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $passwordRequestedAt;
 
     public function __construct()
     {
@@ -303,7 +314,15 @@ class User implements UserInterface
     {
         return $this->reviews;
     }
-
+    public function getContentReviewed()
+    {
+        $reviews = $this->getReviews();
+        $content = new ArrayCollection();
+        foreach ($reviews as $review) {
+            $content->add($review->getContent());
+        }
+        return $content;
+    }
     public function addReview(Review $review): self
     {
         if (!$this->reviews->contains($review)) {
@@ -354,6 +373,30 @@ class User implements UserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getPasswordRequestedAt(): ?\DateTimeInterface
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    public function setPasswordRequestedAt(?\DateTimeInterface $passwordRequestedAt): self
+    {
+        $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserUpdateType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -55,21 +56,7 @@ class UserController extends AbstractFOSRestController
         return $this->view($user);
     }
 
-    /**
-     * @Route("/update/{id}", name="update")
-     */
-    public function update(User $user, Request $request)
-    {
-        $user->setLastname($request->get('lastname') ?? $user->getLastname());
-        $user->setFirstname($request->get('firstname') ?? $user->getFirstname());
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $request->get('password')?? $user->getPassword()));
-        $user->setMail($request->get('mail') ?? $user->getMail());
-        $user->setEnabled($request->get('enabled') ?? $user->getEnabled());
-        $user->setRoles($request->get('roles') ?? $user->getRoles());
-        $this->em->persist($user);
-        $this->em->flush();
-        return $this->view($user);
-    }
+
 
     /**
      * @Route("/delete/{id}", name="delete")

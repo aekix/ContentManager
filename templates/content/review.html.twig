@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ action }} un contenu{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+    {{ encore_entry_link_tags('content') }}
+    {{ encore_entry_link_tags('review') }}
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {% for message in  app.session.flashbag.get('message') %}
+            <p style="color: forestgreen; text-align: center">{{ message }}</p>
+        {% endfor %}
+        <div class="row">
+            <div class="col-4 text-left">
+                <a href="{{ path('content_waiting') }}" class="btn btn-sm btn-primary">Retour</a>
+            </div>
+            <div style="color: forestgreen; text-align: center">
+                {% for message in  app.session.flashbag.get('message') %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+        <div class="row d-flex flex-row">
+            <div class="col-xl-10 col-lg-12">
+                {{ include('content/_edit.html.twig') }}
+            </div>
+            <div class="col-xl-2 col-lg-2">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Approbation</h6>
+                    </div>
+                    <br class="card-body table table-hover">
+                    <span class="text-center"><i class="fas fa-check nb_approval"
+                                                 style="font-size:30px !important; color: forestgreen">{{ content.getNbApproval() }}      </i> <i
+                                class="fas fa-times nb_refused"
+                                style="font-size:30px !important; color: red">{{ content.getReviews()|length - content.getNbApproval() }}</i></span>
+                    <hr>
+                    <span style="display: {% if review %}block;{% else %} none;{% endif %}color: {% if review and review.accepted %}forestgreen{% else %}red{% endif %}"
+                          class="text-center alreadyReview"> Vous avez déjà review ce contenu.</span>
+                    <hr>
+                    <button type="button" class="btn btn-success approval"
+                            style="background-color: forestgreen !important;">
+                        Approuver
+                    </button>
+                    <button type="button" class="btn btn-danger refuse">Décliner</button>
+                    <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Publication</h6>
+                    </div>
+                    <br class="card-body table table-hover">
+                        <button type="button" style="background-color: forestgreen !important;" class="btn btn-success publier" name="accepter" data-toggle="modal" data-target="#publierModal">Publier</button>
+                        <button type="button" class="btn btn-danger refuser" name="refuser" data-toggle="modal" data-target="#refuserModal">Refuser</button>
+                    <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
+                </div>
+            </div>
+        </div>
+        <!-- Publication Modal-->
+        <div class="modal fade" id="refuserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Etes vous sûr de votre choix?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Selectionnez "Oui" si vous voulez vraiment refuser ce contenu.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Non</button>
+                        <a class="btn btn-primary" href="{{ path('content_refuser', {id: content.id}) }}">Oui</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="publierModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Etes vous sûr de votre choix?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Selectionnez "Oui" si vous voulez vraiment publier ce contenu.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Non</button>
+                        <a class="btn btn-primary" href="{{ path('content_publier', {id: content.id}) }}">Oui</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bootstrap snippets justify-content-center">
+            <div class="col-md-10 col-md-offset-2 col-sm-12">
+                <div class="comment-wrapper">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Comment panel
+                        </div>
+                        <div class="panel-body">
+                            <textarea id="textComment" class="form-control" placeholder="write a comment..." rows="3"></textarea>
+                            <br>
+                            <button type="button" class="btn btn-info pull-right" id="btn-envoyer">Envoyer</button>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <ul class="media-list" id="comments">
+                                {% for comment in content.comments|reverse %}
+                                <li class="media" id="{{ comment.id }}">
+                                    <a href="#" class="pull-left">
+                                        <img src="/assets/img/avatar-comment.jpg" alt="" class="img-circle">
+                                    </a>
+                                    <div class="media-body">
+                                <span class="text-muted pull-right">
+                                    <small class="text-muted">{{ comment.publishAt|date('d/m/yy H:i:s', 'Europe/Paris') }}</small>
+                                </span>
+                                        <strong class="text-success">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
+                                        <p>
+                                            {{ comment.text }}
+                                        </p>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+        {{ encore_entry_script_tags('content') }}
+        {{ encore_entry_script_tags('review') }}
+
+    {% endblock %}
