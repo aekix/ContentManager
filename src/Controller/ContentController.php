@@ -35,6 +35,18 @@ class ContentController extends AbstractFOSRestController
     }
 
     /**
+     * @Route("/all", name="all")
+     */
+    public function all(ContentRepository $contentRepository)
+    {
+        $contentsList = $contentRepository->findBy([], ['publicationDate' =>  'DESC'], null, null);
+
+        return $this->render('content/all.html.twig', [
+            'contentsOrderByDate' => $contentsList,
+        ]);
+    }
+
+    /**
      * @Route("/create", name="create")
      */
     public function create(Request $request, ValidatorInterface $validator, FileService $fileService)
@@ -233,4 +245,5 @@ class ContentController extends AbstractFOSRestController
             'review' => $review
         ]);
     }
+
 }
