@@ -184,6 +184,7 @@ class ContentController extends AbstractFOSRestController
     {
         $content->setPublisher($this->getUser());
         $content->setPublicationDate(new \DateTime());
+        $content->setStatus(3);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
@@ -195,6 +196,7 @@ class ContentController extends AbstractFOSRestController
     public function refuser(Content $content)
     {
         $content->setPublisher($this->getUser());
+        $content->setStatus(2);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
