@@ -39,7 +39,7 @@ class ContentController extends AbstractFOSRestController
      */
     public function all(ContentRepository $contentRepository)
     {
-        $contentsList = $contentRepository->findBy([], ['publicationDate' =>  'DESC'], null, null);
+        $contentsList = $contentRepository->findBy(['enabled' => 1, 'status' => 3], ['publicationDate' =>  'DESC'], null, null);
 
         return $this->render('content/all.html.twig', [
             'contentsOrderByDate' => $contentsList,
