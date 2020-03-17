@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -32,6 +33,22 @@ class ContentController extends AbstractFOSRestController
     {
         $this->contentRepository = $contentRepository;
         $this->em = $em;
+    }
+
+    /**
+     * @Route("/MyContents", name="myContents")
+     */
+    public function myContents(Request $request, ContentRepository $contentRepository)
+    {
+        $publishedContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 3], ['publicationDate' => 'DESC'], null, null);
+        $reviewContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 1], null, null, null);
+        $draftContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 0], null, null, null);
+
+        return $this->render('content/myContents.html.twig', [
+            'publishedContents' => $publishedContents,
+            'reviewContents' => $reviewContents,
+            'draftContents' => $draftContents
+        ]);
     }
 
     /**
