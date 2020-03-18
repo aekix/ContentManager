@@ -15,3 +15,7 @@ $(".pop").click(function () {
 $(".waitingContent").click(function(){
     document.location="/content/review/"+$(this).attr("id");
 });
+
+$(document).ready(function() {
+    $('#dataTable').DataTable();
+});

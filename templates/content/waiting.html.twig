@@ -19,8 +19,9 @@
                 <h6 class="m-0 font-weight-bold text-primary">Articles en attente</h6>
             </div>
             <!-- Card Body -->
-            <div class="card-body table table-hover">
-                <table>
+            <div class="card-body">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                     <tr>
                         <th></th>
                         <th style="height: 3vw">Titre</th>
@@ -30,6 +31,8 @@
                         <th><i class="fas fa-check"></i></th>
                         <th><i class="fas fa-times"></i></th>
                     </tr>
+                    </thead>
+                    <tbody>
                     {% for content in contents %}
                         <tr class="waitingContent" id="{{ content.id }}">
                             <td style="color: #00e600">{% if content not in app.user.getContentReviewed() %}New{% endif %}</td>
@@ -41,6 +44,7 @@
                             <td>{{ content.getReviews()|length - content.getNbApproval() }}</td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

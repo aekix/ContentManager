@@ -9,6 +9,7 @@ use App\Entity\Review;
 use App\Form\EditContentType;
 use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Repository\FileRepository;
 use App\Repository\ReviewRepository;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -160,6 +161,20 @@ class ContentController extends AbstractFOSRestController
         $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
         return (new JsonResponse($response));
     }
+
+    /**
+     * @Route("/myContent", name="myContent")
+     */
+    public function myContent(ReviewRepository $reviewRepository,ContentRepository $contentRepository, Request $request)
+    {
+        $user = $this->getUser();
+        $contents = $user->getContents();
+
+        return $this->render('content/myContent.html.twig', [
+            'contents' => $contents,
+        ]);
+    }
+
     /**
      * @Route("/publier/{id}", name="publier")
      */
@@ -185,11 +200,17 @@ class ContentController extends AbstractFOSRestController
 
 
     /**
-     * @Route("/{id}", name="byId")
+     * @Route("/{id}", name="redContent")
      */
-    public function  getById(Content $content)
+    public function  readById(Content $content, FileRepository $fileRepository)
     {
-        return $this->view($content);
+        $file = $fileRepository->findOneBy(['content' => $content->getId()]);
+
+        return $this->render('content/read.html.twig', [
+            'action' => 'Lire',
+            'content' => $content,
+            'file' => $file,
+        ]);
     }
 
 
@@ -233,4 +254,6 @@ class ContentController extends AbstractFOSRestController
             'review' => $review
         ]);
     }
+
+
 }
