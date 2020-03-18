@@ -37,6 +37,28 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/disable/{id}", name="disable")
+     */
+    public function disable(User $user)
+    {
+        $user->setEnabled(0);
+        $this->em->persist($user);
+        $this->em->flush($user);
+        return $this->redirectToRoute('admin_user_edit', ['id' => $user->getId()]);
+    }
+
+    /**
+     * @Route("/enable/{id}", name="enable")
+     */
+    public function enable(User $user)
+    {
+        $user->setEnabled(1);
+        $this->em->persist($user);
+        $this->em->flush($user);
+        return $this->redirectToRoute('admin_user_edit', ['id' => $user->getId()]);
+    }
+
+    /**
      * @Route("/{id}", name="edit")
      */
     public function edit(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
@@ -57,7 +79,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/user_update.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
 }
