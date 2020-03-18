@@ -1,5 +1,5 @@
 <div class="col-4 text-left">
-    <a href="{{ path('user_admin') }}" class="btn btn-sm btn-primary">Retour</a>
+    <a href="{{ path('admin_user_all') }}" class="btn btn-sm btn-primary">Retour</a>
 </div>
 <br />
 <div class="card shadow mb-4 ">
@@ -14,25 +14,13 @@
     <div class="my-custom-class-for-errors">
         {{ form_errors(form) }}
     </div>
-
-    <div class="col-lg-12 ">
-        <div class="input-group input-group-lg toggle">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01">Statut</span>
-            </div>
-            {{ form_widget(form.enabled) }}
-
-        </div>
-    </div>
     </br>
-    {{ form_widget(form.enabled, { 'attr': {'class': 'toggle'} }) }}
-
     <div class="col-lg-12 ">
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroupFileAddon01">Rôle</span>
             </div>
-            {{ form_widget(form.role, { 'attr': {'class': 'custom-select'} }) }}
+            {{ form_widget(form.roles, { 'attr': {'class': 'custom-select'} }) }}
 
         </div>
     </div>

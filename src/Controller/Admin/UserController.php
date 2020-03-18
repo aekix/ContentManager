@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/user/admin", name="admin_user_)
+ * @Route("/user/admin", name="admin_user_")
  */
 class UserController extends AbstractController
 {
@@ -37,7 +37,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/admin/{id}", name="edit")
+     * @Route("/{id}", name="edit")
      */
     public function edit(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -45,13 +45,9 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
 
-            $user->setEnabled((Boolean)$request->get('enabled'));
-            $user->setLastname($request->get('lastname') ?? $user->getLastname());
-            $user->setFirstname($request->get('firstname') ?? $user->getFirstname());
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->get('password') ?? $user->getPassword()));
-            $user->setMail($request->get('mail') ?? $user->getMail());
-            $user->setRoles([$request->get('roles')]);
+            $user->setPassword($passwordEncoder->encodePassword($user, $data->getPassword() ?? $user->getPassword()));
             $this->em->persist($user);
             $this->em->flush();
             $this->get('session')->getFlashBag()->add(

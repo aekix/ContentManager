@@ -23,24 +23,21 @@ class UserUpdateType extends AbstractType
                 'first_options' => array('label' => 'Nouveau mot de passe'),
                 'second_options' => array('label' => 'Confirmer le mot de passe'),
                 'invalid_message' => 'Les 2 mots de passe ne sont pas identiques.',
+                'required' => false,
             ))
             ->add('mail', EmailType::class)
             ->add('firstname')
             ->add('lastname')
-            ->add('role', ChoiceType::class, ['choices' =>
+            ->add('roles', ChoiceType::class, ['choices' =>
                 [
                     'ROLE_ADMIN' => 'ROLE_ADMIN',
                     'ROLE_COMM' => 'ROLE_COMM',
                     'ROLE_REVIEW' => 'ROLE_REVIEW',
                     'ROLE_USER' => 'ROLE_USER',
                 ],
-                'mapped' => false,
-                'data' => $options['data']->getRoles()[0]
-            ])
-            ->add('enabled', CheckboxType::class, [
-                'required' => false,
-                'attr' => ['data-toggle' => 'toggle'],
-                'data' => $options['data']->getEnabled()
+                'expanded' => false,
+                'multiple' => true,
+                'data' => $options['data']->getRoles(),
             ])
             ->add('send', SubmitType::class, ['label' => 'Envoyer'])
         ;
