@@ -32,7 +32,7 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $enabled;
 
@@ -166,12 +166,12 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getEnabled(): ?string
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
 
-    public function setEnabled(string $enabled): self
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -399,5 +399,12 @@ class User implements UserInterface
         $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
+    }
+
+    public function getLabelStatus()
+    {
+        $tabStatut = ['Desactivé','Activé'];
+
+        return $tabStatut[$this->getEnabled()];
     }
 }

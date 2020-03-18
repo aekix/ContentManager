@@ -1,6 +1,10 @@
+<div class="col-4 text-left">
+    <a href="{{ path('user_admin') }}" class="btn btn-sm btn-primary">Retour</a>
+</div>
+<br />
 <div class="card shadow mb-4 ">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Mes informations</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Modifier les informations</h6>
     </div>
     <br class="card-body table table-hover">
     {% for message in  app.session.flashbag.get('message') %}
@@ -10,6 +14,29 @@
     <div class="my-custom-class-for-errors">
         {{ form_errors(form) }}
     </div>
+
+    <div class="col-lg-12 ">
+        <div class="input-group input-group-lg toggle">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Statut</span>
+            </div>
+            {{ form_widget(form.enabled) }}
+
+        </div>
+    </div>
+    </br>
+    {{ form_widget(form.enabled, { 'attr': {'class': 'toggle'} }) }}
+
+    <div class="col-lg-12 ">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Rôle</span>
+            </div>
+            {{ form_widget(form.role, { 'attr': {'class': 'custom-select'} }) }}
+
+        </div>
+    </div>
+    </br>
 
     <div class="col-lg-12">
         <div class="input-group input-group-lg">
@@ -24,7 +51,7 @@
     <div class="col-lg-12 ">
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroup-sizing-lg">Prénom</label>
+                <label class="input-group-text" for="inputGroupSelect01">Prénom</label>
             </div>
             {{ form_widget(form.firstname, { 'attr': {'class': 'form-control'} }) }}
         </div>
@@ -33,7 +60,7 @@
     <div class="col-lg-12 ">
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-lg">Email</span>
+                <span class="input-group-text" id="inputGroupFileAddon01">Email</span>
             </div>
             {{ form_widget(form.mail, { 'attr': {'class': 'form-control'} }) }}
 
@@ -44,7 +71,7 @@
         {{ form_errors(form.password.first) }}
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-lg">Mot de passe</span>
+                <span class="input-group-text" id="inputGroupFileAddon01">Mot de passe</span>
             </div>
             {{ form_widget(form.password.first, { 'attr': {'class': 'form-control'} }) }}
 
@@ -54,7 +81,7 @@
     <div class="col-lg-12 ">
         <div class="input-group input-group-lg">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-lg">Confirmez votre mot de passe</span>
+                <span class="input-group-text" id="inputGroupFileAddon01">Confirmez votre mot de passe</span>
             </div>
             {{ form_widget(form.password.second, { 'attr': {'class': 'form-control'} }) }}
 
@@ -64,4 +91,5 @@
     <div class="text-center">
         {{ form_widget(form.send, { 'attr': {'class': 'btn btn-primary btn-lg  btn-block'} }) }}
     </div>
+    {{ form_end(form) }}
 </div>
