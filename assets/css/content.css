@@ -86,3 +86,7 @@ img.resize {
         width: 100%;
     }
 }
+
+.imgModal {
+    display: none;
+}

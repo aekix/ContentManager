@@ -23,7 +23,9 @@ var span = document.getElementsByClassName("close")[0];
 $(span).on('click', function(){
     $(modal).css('display',"none");
 })
- 
+$('.btnModal').on('click', function () {
+    $('.imgModal').click()
+})
 import * as SimpleMDE from 'simplemde';
 
 var simplemde = new SimpleMDE({ element: $("#new_content_text")[0], togglePreview: true , toolbar: ["bold", "italic", "heading", "quote", "strikethrough","code","link","preview"] });
