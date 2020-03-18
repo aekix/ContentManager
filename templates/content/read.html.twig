@@ -4,53 +4,94 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('home') }}
-    {{ encore_entry_link_tags('content') }}
+    {{ encore_entry_link_tags('modal') }}
     {{ encore_entry_link_tags('review') }}
 
 {% endblock %}
 {% block body %}
     <div class="container-fluid">
-    <div class="row">
+        <div class="row">
 
-        <!-- Area Chart -->
-        <div class="col-xl-12 col-lg-7">
-            <div class="card shadow mb-4 contentText">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ action }} un article</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body ">
-                    <h1 class="text-center">{{ content.title }}</h1>
-                    <br>
-                    <br>
-                    <br>
-                    <p >{{ content.text }}</p>
-                </div>
-                <!-- Trigger the Modal -->
-                <img class="imgModal" id="myImg" src="{{ asset(file.path) }}" alt="{{ file.name }}" style="width:100%;max-width:300px">
-                <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
-                <!-- The Modal -->
-                <div id="myModal" class="modal">
+            <!-- Area Chart -->
+            <div class="col-xl-12 col-lg-7">
+                <div class="card shadow mb-4 contentText">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">{{ action }} un article</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body ">
+                        <h1 class="text-center">{{ content.title }}</h1>
+                        <br>
+                        <br>
+                        <br>
+                        <p>{{ content.text }}</p>
+                    </div>
+                    <!-- Trigger the Modal -->
+                    <img class="imgModal" id="myImg" src="{{ asset(file.path) }}" alt="{{ file.name }}"
+                         style="width:100%;max-width:300px">
+                    <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
 
-                    <!-- The Close Button -->
-                    <span class="close">&times;</span>
+                        <!-- The Close Button -->
+                        <span class="close">&times;</span>
 
-                    <!-- Modal Content (The Image) -->
-                    <img class="modal-content" id="img01">
+                        <!-- Modal Content (The Image) -->
+                        <img class="modal-content" id="img01">
 
-                    <!-- Modal Caption (Image Text) -->
-                    <div id="caption"></div>
+                        <!-- Modal Caption (Image Text) -->
+                        <div id="caption"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <button type="button" class="btnModal btn btn-primary text-center" alt="{{ file.name }}">Voir pièce jointe</button>
+            <button type="button" class="btnModal btn btn-primary text-center" alt="{{ file.name }}">Voir pièce jointe
+            </button>
 
+        </div>
+        <div class="row bootstrap snippets justify-content-center">
+            <div class="col-md-10 col-md-offset-2 col-sm-12">
+                <div class="comment-wrapper">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Comment panel
+                        </div>
+                        <div class="panel-body">
+                            <textarea id="textComment" class="form-control" placeholder="write a comment..." rows="3"></textarea>
+                            <br>
+                            <button type="button" class="btn btn-info pull-right" id="btn-envoyer">Envoyer</button>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <ul class="media-list" id="comments">
+                                {% for comment in content.comments|reverse %}
+                                    <li class="media" id="{{ comment.id }}">
+                                        <a href="#" class="pull-left">
+                                            <img src="/assets/img/avatar-comment.jpg" alt="" class="img-circle">
+                                        </a>
+                                        <div class="media-body">
+                                <span class="text-muted pull-right text-right">
+                                    <small class="text-muted">{{ comment.publishAt|date('d/m/yy H:i:s', 'Europe/Paris') }}</small>
+                                </span>
+                                            <strong class="text-success">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
+                                            <p>
+                                                {{ comment.text }}
+                                            </p>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
+
 {% endblock %}
         {% block javascripts %}
-        {{ parent() }}
-        {{ encore_entry_script_tags('home') }}
-        {{ encore_entry_script_tags('content') }}
-        {{ encore_entry_script_tags('review') }}
+            {{ parent() }}
+            {{ encore_entry_script_tags('home') }}
+            {{ encore_entry_script_tags('modal') }}
+            {{ encore_entry_script_tags('review') }}
         {% endblock %}

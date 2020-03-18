@@ -202,7 +202,7 @@ class ContentController extends AbstractFOSRestController
     /**
      * @Route("/{id}", name="redContent")
      */
-    public function  readById(Content $content, FileRepository $fileRepository)
+    public function  getById(Content $content, FileRepository $fileRepository)
     {
         $file = $fileRepository->findOneBy(['content' => $content->getId()]);
 
