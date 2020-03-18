@@ -29,6 +29,7 @@
         "@fortawesome/fontawesome-free": "5.10.2",
         "@popperjs/core": "^2.0.6",
         "bootstrap": "4.3.1",
+        "bootstrap4-toggle": "^3.6.1",
         "chart.js": "2.8.0",
         "datatables.net": "^1.10.20",
         "datatables.net-bs4": "1.10.19",

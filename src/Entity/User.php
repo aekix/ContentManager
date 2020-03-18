@@ -27,12 +27,12 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $enabled;
 
@@ -142,7 +142,7 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -166,12 +166,12 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getEnabled(): ?string
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
 
-    public function setEnabled(string $enabled): self
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -399,5 +399,12 @@ class User implements UserInterface
         $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
+    }
+
+    public function getLabelStatus()
+    {
+        $tabStatut = ['Desactivé','Activé'];
+
+        return $tabStatut[$this->getEnabled()];
     }
 }
