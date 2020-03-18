@@ -36,6 +36,18 @@ class ContentController extends AbstractFOSRestController
     }
 
     /**
+     * @Route("/all", name="all")
+     */
+    public function all(ContentRepository $contentRepository)
+    {
+        $contentsList = $contentRepository->findPublishedContents();
+
+        return $this->render('content/all.html.twig', [
+            'contentsOrderByDate' => $contentsList,
+        ]);
+    }
+
+    /**
      * @Route("/create", name="create")
      */
     public function create(Request $request, ValidatorInterface $validator, FileService $fileService)
@@ -161,20 +173,6 @@ class ContentController extends AbstractFOSRestController
         $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
         return (new JsonResponse($response));
     }
-
-    /**
-     * @Route("/myContent", name="myContent")
-     */
-    public function myContent(ReviewRepository $reviewRepository,ContentRepository $contentRepository, Request $request)
-    {
-        $user = $this->getUser();
-        $contents = $user->getContents();
-
-        return $this->render('content/myContent.html.twig', [
-            'contents' => $contents,
-        ]);
-    }
-
     /**
      * @Route("/publier/{id}", name="publier")
      */
