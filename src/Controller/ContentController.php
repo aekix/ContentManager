@@ -213,19 +213,6 @@ class ContentController extends AbstractFOSRestController
         ]);
     }
 
-
-    /**
-     * @Route("/delete/{id}", name="delete")
-     */
-    public function delete(Content $content)
-    {
-        $content->setEnabled(0);
-        $this->em->persist($content);
-        $this->em->flush();
-        return $this->view($content);
-    }
-
-
     /**
      * @Route("/review/{id}", name="review")
      */

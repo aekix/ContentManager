@@ -16,6 +16,9 @@ $(".waitingContent").click(function(){
     document.location="/content/review/"+$(this).attr("id");
 });
 
-$(document).ready(function() {
-    $('#dataTable').DataTable();
+
+$(".publishContentEdit").click(function(){
+    document.location="/content/admin/"+$(this).attr("id");
 });
+
+

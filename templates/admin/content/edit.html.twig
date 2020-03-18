@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ action }} un contenu{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+    {{ encore_entry_link_tags('content') }}
+    {{ encore_entry_link_tags('review') }}
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {% for message in  app.session.flashbag.get('message') %}
+            <p style="color: forestgreen; text-align: center">{{ message }}</p>
+        {% endfor %}
+        <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
+
+        {% if content.enabled %}
+            <div class=" float-right">
+                <a href="{{ path('admin_content_delete', {id: content.id}) }}"
+                   class="btn btn-sm btn-danger">Désactiver</a>
+            </div>
+        {% else %}
+            <div class=" float-right">
+                <a href="{{ path('admin_content_active', {id: content.id}) }}" class="btn btn-sm btn-success">Activer</a>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-4 text-left">
+                <a href="{{ path('admin_content_list') }}" class="btn btn-sm btn-primary">Retour</a>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row d-flex flex-row">
+            <div class="col-xl-12 col-lg-12">
+
+                {{ include('content/_edit.html.twig') }}
+            </div>
+
+        </div>
+    </div>
+    <div class="row bootstrap snippets justify-content-center">
+        <div class="col-md-10 col-md-offset-2 col-sm-12">
+            <div class="comment-wrapper">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Comment panel
+                    </div>
+                    <div class="panel-body">
+                        <textarea id="textComment" class="form-control" placeholder="write a comment..."
+                                  rows="3"></textarea>
+                        <br>
+                        <button type="button" class="btn btn-info pull-right" id="btn-envoyer">Envoyer</button>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <ul class="media-list" id="comments">
+                            {% for comment in content.comments|reverse %}
+                                <li class="media" id="{{ comment.id }}">
+                                    <a href="#" class="pull-left">
+                                        <img src="/assets/img/avatar-comment.jpg" alt="" class="img-circle">
+                                    </a>
+                                    <div class="media-body">
+                                <span class="text-muted pull-right">
+                                    <small class="text-muted">{{ comment.publishAt|date('d/m/yy H:i:s', 'Europe/Paris') }}</small>
+                                </span>
+                                        <strong class="text-success">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
+                                        <p>
+                                            {{ comment.text }}
+                                        </p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+        {{ encore_entry_script_tags('content') }}
+        {{ encore_entry_script_tags('review') }}
+
+    {% endblock %}
