@@ -51,8 +51,10 @@ class ContentRepository extends ServiceEntityRepository
             ->andWhere('c.status = 1')
             ->andWhere('c.publisher IS NULL')
             ->andWhere('c.publicationDate IS NULL');
+        return $qb->getQuery()->execute();
+    }
 
-    public function findPublishedContents()
+        public function findPublishedContents()
     {
         $qb = $this->createQueryBuilder('c')
             ->andwhere('c.enabled = 1')
