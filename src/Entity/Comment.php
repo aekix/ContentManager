@@ -32,6 +32,11 @@ class Comment
      */
     private $text;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $publishAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Comment
     public function setText(string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getPublishAt(): ?\DateTimeInterface
+    {
+        return $this->publishAt;
+    }
+
+    public function setPublishAt(\DateTimeInterface $publishAt): self
+    {
+        $this->publishAt = $publishAt;
 
         return $this;
     }

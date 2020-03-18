@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\RegisterUserType;
 use App\Form\EmailResetType;
 use App\Form\NewPasswordType;
 use App\Repository\UserRepository;
@@ -131,5 +132,29 @@ class SecurityController extends AbstractController
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/register", name="register")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+        $user = new User();
+        $form = $this->createForm(RegisterUserType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($user,$user->getPassword());
+            $user->setPassword($password);
+            $user->setEnabled(1);
+            $user->setRoles(['ROLE_USER']);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('login');
+        }
+
+        return $this->render('security/register.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

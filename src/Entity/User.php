@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -313,7 +314,15 @@ class User implements UserInterface
     {
         return $this->reviews;
     }
-
+    public function getContentReviewed()
+    {
+        $reviews = $this->getReviews();
+        $content = new ArrayCollection();
+        foreach ($reviews as $review) {
+            $content->add($review->getContent());
+        }
+        return $content;
+    }
     public function addReview(Review $review): self
     {
         if (!$this->reviews->contains($review)) {

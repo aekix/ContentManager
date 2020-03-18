@@ -2,17 +2,25 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Content;
 use App\Entity\File;
+use App\Entity\Review;
+use App\Form\EditContentType;
 use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Repository\FileRepository;
+use App\Repository\ReviewRepository;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 /**
  * @Route("/content", name="content_")
  */
@@ -25,6 +33,18 @@ class ContentController extends AbstractFOSRestController
     {
         $this->contentRepository = $contentRepository;
         $this->em = $em;
+    }
+
+    /**
+     * @Route("/all", name="all")
+     */
+    public function all(ContentRepository $contentRepository)
+    {
+        $contentsList = $contentRepository->findPublishedContents();
+
+        return $this->render('content/all.html.twig', [
+            'contentsOrderByDate' => $contentsList,
+        ]);
     }
 
     /**
@@ -58,41 +78,167 @@ class ContentController extends AbstractFOSRestController
         }
         return $this->render('content/newContent.html.twig', [
             'form' => $form->createView(),
+            'action' => 'Rediger'
         ]);
     }
 
     /**
-     * @Route("/{id}", name="byId")
+     * @Route("/waiting", name="waiting")
      */
-    public function  getById(Content $content)
+    public function waiting()
     {
-        return $this->view($content);
+        $waitingContent = $this->contentRepository->findBy(['publisher' => null, 'status' => 1]);
+
+        return $this->render('content/waiting.html.twig', [
+            'contents' => $waitingContent,
+            'reviews' => $this->getUser()->getReviews()
+        ]);
+    }
+    /**
+     * @Route("/approval", name="approval")
+     */
+    public function approval(ReviewRepository $reviewRepository,ContentRepository $contentRepository, Request $request)
+    {
+        $user = $this->getUser();
+        $content = $contentRepository->find($request->get('id'));
+        $review = $reviewRepository->findOneBy(['user' => $user, 'content' => $content]);
+        if ($review) {
+            $review->setAccepted(1);
+        }
+        else {
+            $review = new Review();
+            $review->setUser($user);
+            $review->setContent($content);
+            $review->setAccepted(1);
+        }
+        $this->em->persist($review);
+        $this->em->flush();
+        $response['yes'] = $content->getNbApproval();
+        $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
+        return (new JsonResponse($response));
+    }
+
+
+    /**
+     * @Route("/comment", name="comment", methods="POST")
+     */
+    public function addComment(ContentRepository $contentRepository, Request $request)
+    {
+        $content = $contentRepository->find($request->get('idContent'));
+        if ($request->get('text')) {
+
+            $user = $this->getUser();
+            $comment = new Comment();
+            $comment->setText($request->get('text'));
+            $comment->setUser($user);
+            $comment->setContent($content);
+            $comment->setPublishAt(new \DateTime());
+            $this->em->persist($comment);
+            $this->em->flush();
+        }
+        $comments = $content->getComments();
+        $aComment = [];
+        foreach ($comments as $comment) {
+            $aComment[] = [
+                'id' => $comment->getId(),
+                'text' => $comment->getText(),
+                'lastname' => $comment->getUser()->getLastname(),
+                'firstname' =>$comment->getUser()->getFirstname(),
+                'date' => date_format($comment->getPublishAt(), 'd/m/Y H:i:s'),
+            ];
+        }
+        return (new JsonResponse($aComment));
     }
 
     /**
-     * @Route("/update/{id}", name="update")
+     * @Route("/refuse", name="refuse")
      */
-    public function update(Content $content, Request $request)
+    public function refuse(ReviewRepository $reviewRepository,ContentRepository $contentRepository, Request $request)
     {
-        $content->setLastname($request->get('lastname') ?? $content->getLastname());
-        $content->setFirstname($request->get('firstname') ?? $content->getFirstname());
-        $content->setPassword($this->passwordEncoder->encodePassword($content, $request->get('password')?? $content->getPassword()));
-        $content->setMail($request->get('mail') ?? $content->getMail());
-        $content->setEnabled($request->get('enabled') ?? $content->getEnabled());
-        $content->setRoles($request->get('roles') ?? $content->getRoles());
+        $user = $this->getUser();
+        $content = $contentRepository->find($request->get('id'));
+        $review = $reviewRepository->findOneBy(['user' => $user, 'content' => $content]);
+        if ($review) {
+            $review->setAccepted(0);
+        }
+        else {
+            $review = new Review();
+            $review->setUser($user);
+            $review->setContent($content);
+            $review->setAccepted(0);
+        }
+        $this->em->persist($review);
+        $this->em->flush();
+        $response['yes'] = $content->getNbApproval();
+        $response['no'] =  count($content->getReviews()) - $content->getNbApproval();
+        return (new JsonResponse($response));
+    }
+    /**
+     * @Route("/publier/{id}", name="publier")
+     */
+    public function publier(Content $content)
+    {
+        $content->setPublisher($this->getUser());
+        $content->setPublicationDate(new \DateTime());
         $this->em->persist($content);
         $this->em->flush();
-        return $this->view($content);
+        return $this->redirectToRoute('content_waiting');
     }
 
     /**
-     * @Route("/delete/{id}", name="delete")
+     * @Route("/refuser/{id}", name="refuser")
      */
-    public function delete(Content $content)
+    public function refuser(Content $content)
     {
-        $content->setEnabled(1);
+        $content->setPublisher($this->getUser());
         $this->em->persist($content);
         $this->em->flush();
-        return $this->view($content);
+        return $this->redirectToRoute('content_waiting');
     }
+
+
+    /**
+     * @Route("/{id}", name="redContent")
+     */
+    public function  getById(Content $content, FileRepository $fileRepository)
+    {
+        $file = $fileRepository->findOneBy(['content' => $content->getId()]);
+
+        return $this->render('content/read.html.twig', [
+            'action' => 'Lire',
+            'content' => $content,
+            'file' => $file,
+        ]);
+    }
+
+    /**
+     * @Route("/review/{id}", name="review")
+     */
+    public function review(Content $content, ContentRepository $contentRepository, Request $request, ReviewRepository $reviewRepository)
+    {
+        $form = $this->createForm(EditContentType::class, $content);
+        $form->handleRequest($request);
+        $review = $reviewRepository->findOneBy(['user' => $this->getUser(), 'content' => $content]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $content->setTitle($data->getTitle());
+            $content->setText($data->getText());
+            $content->setCategory($data->getCategory());
+            $this->em->persist($content);
+            $this->em->flush();
+            $this->get('session')->getFlashBag()->add(
+                'message',
+                'Modifications enregistrées'
+            );
+        }
+        return $this->render('content/review.html.twig', [
+            'form' => $form->createView(),
+            'action' => 'Modifier',
+            'content' => $content,
+            'review' => $review
+        ]);
+    }
+
+
 }
