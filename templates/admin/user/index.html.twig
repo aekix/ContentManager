@@ -12,7 +12,7 @@
 
 <div class="container-fluid">
     <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -33,14 +33,17 @@
                 </div>
             </div>
             <!-- Card Body -->
-            <div class="card-body table table-hover">
+            <div class="card-body table table-hover" id="dataTable">
                 <table>
+                    <thead>
                     <tr>
                         <th style="height: 3vw">Nom</th>
                         <th>Courriel</th>
                         <th>Rôle</th>
                         <th>Statut</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     {% for user in users %}
                         <tr class="usersList" id="{{ user.id }}">
                             <td>{{ user.firstname }} {{ user.lastname }}</td>
@@ -49,6 +52,7 @@
                             <td>{{ user.getLabelStatus() }}</td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

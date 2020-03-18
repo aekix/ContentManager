@@ -31,7 +31,7 @@ class UserUpdateType extends AbstractType
                 [
                     'ROLE_ADMIN' => 'ROLE_ADMIN',
                     'ROLE_COMM' => 'ROLE_COMM',
-                    'ROLE_REVIEWER' => 'ROLE_REVIEWER',
+                    'ROLE_REVIEW' => 'ROLE_REVIEW',
                     'ROLE_USER' => 'ROLE_USER',
                 ],
                 'mapped' => false,

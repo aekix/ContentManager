@@ -11,6 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/user/admin", name="admin_user_)
+ */
 class UserController extends AbstractController
 {
 
@@ -22,7 +25,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/admin", name="user_admin")
+     * @Route("/all", name="all")
      */
     public function index(UserRepository $userRepository)
     {
@@ -34,9 +37,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/admin/{id}", name="get")
+     * @Route("/user/admin/{id}", name="edit")
      */
-    public function getById(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function edit(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createForm(UserUpdateType::class, $user);
         $form->handleRequest($request);
