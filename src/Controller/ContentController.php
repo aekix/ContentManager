@@ -9,6 +9,7 @@ use App\Entity\Review;
 use App\Form\EditContentType;
 use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Repository\FileRepository;
 use App\Repository\ReviewRepository;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,7 +48,19 @@ class ContentController extends AbstractFOSRestController
         return $this->render('content/myContents.html.twig', [
             'publishedContents' => $publishedContents,
             'reviewContents' => $reviewContents,
-            'draftContents' => $draftContents
+            'draftContents' => $draftContents,
+          ]);
+    }
+  
+    /**
+     * @Route("/all", name="all")
+     */
+    public function all(ContentRepository $contentRepository)
+    {
+        $contentsList = $contentRepository->findPublishedContents();
+
+        return $this->render('content/all.html.twig', [
+            'contentsOrderByDate' => $contentsList,
         ]);
     }
 
@@ -204,25 +217,18 @@ class ContentController extends AbstractFOSRestController
 
 
     /**
-     * @Route("/{id}", name="byId")
+     * @Route("/{id}", name="redContent")
      */
-    public function  getById(Content $content)
+    public function  getById(Content $content, FileRepository $fileRepository)
     {
-        return $this->view($content);
+        $file = $fileRepository->findOneBy(['content' => $content->getId()]);
+
+        return $this->render('content/read.html.twig', [
+            'action' => 'Lire',
+            'content' => $content,
+            'file' => $file,
+        ]);
     }
-
-
-    /**
-     * @Route("/delete/{id}", name="delete")
-     */
-    public function delete(Content $content)
-    {
-        $content->setEnabled(0);
-        $this->em->persist($content);
-        $this->em->flush();
-        return $this->view($content);
-    }
-
 
     /**
      * @Route("/review/{id}", name="review")
@@ -252,4 +258,6 @@ class ContentController extends AbstractFOSRestController
             'review' => $review
         ]);
     }
+
+
 }

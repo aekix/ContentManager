@@ -25,7 +25,7 @@ class ContentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.enabled = 1')
             ->andWhere('c.status = 1')
-            ->andWhere('c.enabled IS NOT NULL')
+            ->andwhere('c.publisher IS NOT NULL')
             ->orderBy('c.publicationDate', 'DESC')
             ->setMaxResults(10);
         return $qb->getQuery()->execute();
@@ -52,6 +52,15 @@ class ContentRepository extends ServiceEntityRepository
             ->andWhere('c.publisher IS NULL')
             ->andWhere('c.publicationDate IS NULL');
 
+    public function findPublishedContents()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andwhere('c.enabled = 1')
+            ->andwhere('c.status = 1')
+            ->andwhere('c.publisher IS NOT NULL')
+            ->andwhere('c.publicationDate IS NOT NULL')
+            ->orderBy('c.publicationDate', 'DESC');
+
         return $qb->getQuery()->execute();
     }
 
@@ -66,6 +75,7 @@ class ContentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->execute();
     }
+
 
     // /**
     //  * @return Content[] Returns an array of Content objects
