@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Content;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -22,14 +23,49 @@ class ContentRepository extends ServiceEntityRepository
     public function findHomePublishedContents()
     {
         $qb = $this->createQueryBuilder('c')
-            ->where('c.enabled = 1')
-            ->where('c.status = 1')
-            ->where('c.enabled IS NOT NULL')
+            ->andWhere('c.enabled = 1')
+            ->andWhere('c.status = 1')
+            ->andWhere('c.enabled IS NOT NULL')
             ->orderBy('c.publicationDate', 'DESC')
             ->setMaxResults(10);
         return $qb->getQuery()->execute();
     }
 
+    public function findPublishedContentsFromUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.author = ' . $user->getId())
+            ->andWhere('c.enabled = 1')
+            ->andWhere('c.status = 1')
+            ->andWhere('c.publisher IS NOT NULL')
+            ->andWhere('c.publicationDate IS NOT NULL')
+            ->orderBy('c.publicationDate', 'DESC');
+        return $qb->getQuery()->execute();
+    }
+
+    public function findReviewContentsFromUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.author = ' . $user->getId())
+            ->andWhere('c.enabled = 1')
+            ->andWhere('c.status = 1')
+            ->andWhere('c.publisher IS NULL')
+            ->andWhere('c.publicationDate IS NULL');
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findDraftsContentsFromUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.author = ' . $user->getId())
+            ->andWhere('c.enabled = 1')
+            ->andWhere('c.status = 0')
+            ->andWhere('c.publisher IS NULL')
+            ->andWhere('c.publicationDate IS NULL');
+
+        return $qb->getQuery()->execute();
+    }
 
     // /**
     //  * @return Content[] Returns an array of Content objects

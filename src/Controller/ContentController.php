@@ -40,9 +40,9 @@ class ContentController extends AbstractFOSRestController
      */
     public function myContents(Request $request, ContentRepository $contentRepository)
     {
-        $publishedContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 3], ['publicationDate' => 'DESC'], null, null);
-        $reviewContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 1], null, null, null);
-        $draftContents = $contentRepository->findBy(['author' => $this->getUser('id'), 'enabled' => 1,  'status' => 0], null, null, null);
+        $publishedContents = $contentRepository->findPublishedContentsFromUser($this->getUser());
+        $reviewContents = $contentRepository->findReviewContentsFromUser($this->getUser());
+        $draftContents = $contentRepository->findDraftsContentsFromUser($this->getUser());
 
         return $this->render('content/myContents.html.twig', [
             'publishedContents' => $publishedContents,
@@ -184,7 +184,7 @@ class ContentController extends AbstractFOSRestController
     {
         $content->setPublisher($this->getUser());
         $content->setPublicationDate(new \DateTime());
-        $content->setStatus(3);
+        $content->setStatus(1);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
@@ -196,7 +196,7 @@ class ContentController extends AbstractFOSRestController
     public function refuser(Content $content)
     {
         $content->setPublisher($this->getUser());
-        $content->setStatus(2);
+        $content->setStatus(1);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
