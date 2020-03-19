@@ -15,3 +15,10 @@ $(".pop").click(function () {
 $(".waitingContent").click(function(){
     document.location="/content/review/"+$(this).attr("id");
 });
+
+
+$(".publishContentEdit").click(function(){
+    document.location="/content/admin/"+$(this).attr("id");
+});
+
+

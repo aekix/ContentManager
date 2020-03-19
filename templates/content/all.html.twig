@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All contents order by date!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+
+
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Body -->
+                <div class="card-body table table-hover">
+                    <table>
+                        <tr>
+                            <th style="height: 3vw">Titre</th>
+                            <th>Auteur</th>
+                            <th>Date</th>
+                            <th>Catégorie</th>
+                        </tr>
+                        {% for content in contentsOrderByDate %}
+                            <tr class="publishedContent" id="{{ content.id }}">
+                                <td style="height: 3vw">{{ content.title }}</td>
+                                <td>{{ content.author.firstname }} {{ content.author.lastname }}</td>
+                                <td>{{ content.publicationDate|date('d M yy', 'Europe/Paris') }}</td>
+                                <td>{{ content.category.label }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+
+    {% endblock %}

@@ -9,6 +9,7 @@ use App\Entity\Review;
 use App\Form\EditContentType;
 use App\Form\NewContentType;
 use App\Repository\ContentRepository;
+use App\Repository\FileRepository;
 use App\Repository\ReviewRepository;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -32,6 +34,34 @@ class ContentController extends AbstractFOSRestController
     {
         $this->contentRepository = $contentRepository;
         $this->em = $em;
+    }
+
+    /**
+     * @Route("/MyContents", name="myContents")
+     */
+    public function myContents(Request $request, ContentRepository $contentRepository)
+    {
+        $publishedContents = $contentRepository->findPublishedContentsFromUser($this->getUser());
+        $reviewContents = $contentRepository->findReviewContentsFromUser($this->getUser());
+        $draftContents = $contentRepository->findDraftsContentsFromUser($this->getUser());
+
+        return $this->render('content/myContents.html.twig', [
+            'publishedContents' => $publishedContents,
+            'reviewContents' => $reviewContents,
+            'draftContents' => $draftContents,
+          ]);
+    }
+  
+    /**
+     * @Route("/all", name="all")
+     */
+    public function all(ContentRepository $contentRepository)
+    {
+        $contentsList = $contentRepository->findPublishedContents();
+
+        return $this->render('content/all.html.twig', [
+            'contentsOrderByDate' => $contentsList,
+        ]);
     }
 
     /**
@@ -167,6 +197,7 @@ class ContentController extends AbstractFOSRestController
     {
         $content->setPublisher($this->getUser());
         $content->setPublicationDate(new \DateTime());
+        $content->setStatus(1);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
@@ -178,6 +209,7 @@ class ContentController extends AbstractFOSRestController
     public function refuser(Content $content)
     {
         $content->setPublisher($this->getUser());
+        $content->setStatus(1);
         $this->em->persist($content);
         $this->em->flush();
         return $this->redirectToRoute('content_waiting');
@@ -185,25 +217,18 @@ class ContentController extends AbstractFOSRestController
 
 
     /**
-     * @Route("/{id}", name="byId")
+     * @Route("/{id}", name="redContent")
      */
-    public function  getById(Content $content)
+    public function  getById(Content $content, FileRepository $fileRepository)
     {
-        return $this->view($content);
+        $file = $fileRepository->findOneBy(['content' => $content->getId()]);
+
+        return $this->render('content/read.html.twig', [
+            'action' => 'Lire',
+            'content' => $content,
+            'file' => $file,
+        ]);
     }
-
-
-    /**
-     * @Route("/delete/{id}", name="delete")
-     */
-    public function delete(Content $content)
-    {
-        $content->setEnabled(0);
-        $this->em->persist($content);
-        $this->em->flush();
-        return $this->view($content);
-    }
-
 
     /**
      * @Route("/review/{id}", name="review")
@@ -233,4 +258,6 @@ class ContentController extends AbstractFOSRestController
             'review' => $review
         ]);
     }
+
+
 }

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="float-right">
+        {% if null != socialNetwork %}
+            <a href="{{ path('admin_socialNetworks_delete', {id: socialNetwork.id}) }}" class="btn btn-sm btn-danger">Supprimer</a>
+        {% endif %}
+    </div>
+    <div class="row justify-content-center ">
+        <div class="col-xl-8 col-lg-8 col-md-10">
+            {{ include('admin/socialNetworks/_form_update.html.twig') }}
+        </div>
+</div>
+</div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+    {% endblock %}

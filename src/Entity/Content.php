@@ -40,7 +40,7 @@ class Content
     private $publisher;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $publicationDate;
 
@@ -74,12 +74,18 @@ class Content
      */
     private $title;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
     public function __construct()
     {
         $this->contentHistories = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->enabled = 1;
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -285,6 +291,18 @@ class Content
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -27,7 +27,7 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
-        $user->setEnabled(1);
+        $user->setEnabled(true);
         $user->setMail($faker->email);
         $user->setFirstname($faker->firstName);
         $user->setLastname($faker->lastName);
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_COMM']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
-            $user->setEnabled(1);
+            $user->setEnabled(true);
             $user->setMail($faker->email);
             $user->setFirstname($faker->firstName);
             $user->setLastname($faker->lastName);
@@ -50,7 +50,7 @@ class UserFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_REVIEWER']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
-            $user->setEnabled(1);
+            $user->setEnabled(true);
             $user->setMail($faker->email);
             $user->setFirstname($faker->firstName);
             $user->setLastname($faker->lastName);
@@ -62,7 +62,7 @@ class UserFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_USER']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, 'root'));
-            $user->setEnabled(random_int(0, 1));
+            $user->setEnabled((Boolean)random_int(0, 1));
             $user->setMail($faker->email);
             $user->setFirstname($faker->firstName);
             $user->setLastname($faker->lastName);

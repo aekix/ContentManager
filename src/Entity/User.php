@@ -27,12 +27,12 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $enabled;
 
@@ -142,7 +142,7 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -166,12 +166,12 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getEnabled(): ?string
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
 
-    public function setEnabled(string $enabled): self
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -399,5 +399,70 @@ class User implements UserInterface
         $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
+    }
+
+    public function getLabelStatus()
+    {
+        $tabStatut = ['Desactivé','Activé'];
+
+        return $tabStatut[$this->getEnabled()];
+    }
+
+    public function getNbContentThisMonth()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if (strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) > strtotime('-1 month')){
+                $nbContent++;
+            }
+        }
+        return $nbContent;
+    }
+
+    public function getNbContentLastMonth()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if (strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) > strtotime('-2 month') &&
+                strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) < strtotime('-1 month')){
+                $nbContent++;
+            }
+        }
+        return $nbContent;
+    }
+
+    public function getProgressActivity()
+    {
+        if ($this->getNbContentLastMonth())
+            return (($this->getNbContentThisMonth() - $this->getNbContentLastMonth()) / $this->getNbContentLastMonth()) * 100;
+        return (0);
+    }
+
+    public function getTauxAcceptation()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if ($content->getPublisher() != null && $content->getPublicationDate() != null){
+                $nbContent++;
+            }
+        }
+        if (count($this->getContents()))
+            return round(( 100 * $nbContent) / count($this->getContents()),1);
+        return 0;
+    }
+
+    public function getApprobation()
+    {
+        $reviews = $this->reviews;
+        $nbApprob = 0;
+        foreach ($reviews as $review) {
+            if ($review->getAccepted()){
+                $nbApprob++;
+            }
+        }
+        return $nbApprob;
     }
 }
