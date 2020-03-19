@@ -29,6 +29,7 @@ Encore
     .addEntry('review', './assets/js/review.js')
     .addEntry('modal', './assets/js/modal.js')
     .addEntry('admin_user', './assets/js/admin/user.js')
+    .addEntry('admin_socialNetworks', './assets/js/admin/socialNetworks.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
