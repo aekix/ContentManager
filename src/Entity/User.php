@@ -407,4 +407,62 @@ class User implements UserInterface
 
         return $tabStatut[$this->getEnabled()];
     }
+
+    public function getNbContentThisMonth()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if (strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) > strtotime('-1 month')){
+                $nbContent++;
+            }
+        }
+        return $nbContent;
+    }
+
+    public function getNbContentLastMonth()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if (strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) > strtotime('-2 month') &&
+                strtotime($content->getCreatedAt()->format('Y-m-d H:i:s')) < strtotime('-1 month')){
+                $nbContent++;
+            }
+        }
+        return $nbContent;
+    }
+
+    public function getProgressActivity()
+    {
+        if ($this->getNbContentLastMonth())
+            return (($this->getNbContentThisMonth() - $this->getNbContentLastMonth()) / $this->getNbContentLastMonth()) * 100;
+        return (0);
+    }
+
+    public function getTauxAcceptation()
+    {
+        $contents = $this->contents;
+        $nbContent = 0;
+        foreach ($contents as $content) {
+            if ($content->getPublisher() != null && $content->getPublicationDate() != null){
+                $nbContent++;
+            }
+        }
+        if (count($this->getContents()))
+            return round(( 100 * $nbContent) / count($this->getContents()),1);
+        return 0;
+    }
+
+    public function getApprobation()
+    {
+        $reviews = $this->reviews;
+        $nbApprob = 0;
+        foreach ($reviews as $review) {
+            if ($review->getAccepted()){
+                $nbApprob++;
+            }
+        }
+        return $nbApprob;
+    }
 }
