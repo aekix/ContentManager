@@ -18,9 +18,3 @@
     box-shadow: 0 3px 2px
     rgba(233,236,239,.05);
 }
-
-.password-image {
-    background: no-repeat url("/assets/img/logo.png");
-    background-position: center;
-    background-size: cover;
-}
