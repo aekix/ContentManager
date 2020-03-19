@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File as Filer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
@@ -21,6 +23,26 @@ class File
      * @ORM\JoinColumn(nullable=false)
      */
     private $content;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\File(
+     *     maxSize = "30M",
+     *     mimeTypes = {
+     *         "video/mp4",
+     *         "video/mpeg",
+     *         "video/webm",
+     *         "image/jpg",
+     *         "image/bmp",
+     *         "image/webp",
+     *         "image/png",
+     *         "image/jpeg",
+     *     },
+     *     maxSizeMessage="Le poids de la pièce jointe est trop important. Le poids maximum accepté est {{ limit }}.",
+     *     mimeTypesMessage= "Ce type de fichier n'est pas prit en charge."
+     * )
+     */
+    private $file;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -87,6 +109,17 @@ class File
     {
         $this->type = $type;
 
+        return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(?Filer $file)
+    {
+        $this->file = $file;
         return $this;
     }
 }

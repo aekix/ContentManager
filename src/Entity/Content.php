@@ -198,6 +198,19 @@ class Content
         return $this->reviews;
     }
 
+    public function getNbApproval()
+    {
+        $reviews = $this->getReviews();
+        $count = 0;
+
+        foreach ($reviews as $review) {
+            if ($review->getAccepted())  {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     public function addReview(Review $review): self
     {
         if (!$this->reviews->contains($review)) {
