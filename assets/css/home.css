@@ -1,4 +1,6 @@
-.publishedContent, .waitingContent, .publishContentEdit, .userList{
+
+.publishedContent, .waitingContent, .publishContentEdit, .userList, .socialNetworksList, .categoriesList{
+
     cursor:pointer;
 }
 
