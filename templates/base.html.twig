@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
 
@@ -21,7 +21,7 @@
     <body id="page-top">
     <script>
         $(document).ready( function () {
-            $('#dataTable').DataTable();
+            $('#dataTable, .dataTable').DataTable();
         } );
     </script>
     {{ include('include/header.html.twig') }}
