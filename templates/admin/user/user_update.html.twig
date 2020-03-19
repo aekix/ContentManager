@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="float-right">
+            {% if user.enabled %}
+                <a href="{{ path('admin_user_disable', {id: user.id}) }}" class="btn btn-sm btn-danger">Désactiver</a>
+            {% else %}
+                <a href="{{ path('admin_user_enable', {id: user.id}) }}" class="btn btn-sm btn-success">Activer</a>
+            {% endif %}
+        </div>
+        <div class="row justify-content-center ">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                {{ include('admin/user/_form_update.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('home') }}
+    {% endblock %}
