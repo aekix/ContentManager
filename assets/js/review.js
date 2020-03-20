@@ -15,7 +15,7 @@ $('.approval').on('click', function () {
     if ($('.alreadyReview')) {
         $('.alreadyReview').css('color', 'forestgreen');
         $('.alreadyReview').css('display', 'block');
-        $('.alreadyReview').html('Vous avez approuver ce contenu');
+        $('.alreadyReview').html('Vous avez approuvé ce contenu');
 
     }
 })

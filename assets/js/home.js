@@ -21,4 +21,6 @@ $(".publishContentEdit").click(function(){
     document.location="/content/admin/"+$(this).attr("id");
 });
 
-
+$(".draftContent").click(function(){
+    document.location="/content/create/"+$(this).attr("id");
+});

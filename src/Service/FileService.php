@@ -27,7 +27,7 @@ class FileService
 
 // Move file.
         $file->move($basePath, $fileName);
-        $pj->setPath($basePath . '/' . $fileName);
+        $pj->setPath('/upload/' . $fileName);
         $pj->setFile(null);
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);

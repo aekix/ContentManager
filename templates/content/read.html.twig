@@ -20,16 +20,18 @@
                         <h6 class="m-0 font-weight-bold text-primary">{{ action }} un article</h6>
                     </div>
                     <!-- Card Body -->
-                    <div class="card-body ">
-                        <h1 class="text-center">{{ content.title }}</h1>
+                    <div class="card-body text-center">
+                        <h1 class="">{{ content.title }}</h1>
+                        {% if file %}
+                        <img class="imgModal " id="myImg" src="{{ asset(file.path) }}" alt="{{ file.name }}"
+                             style="width:100%;max-width:300px">
+                        {% endif %}
                         <br>
                         <br>
                         <br>
                         <p>{{ content.text }}</p>
                     </div>
                     <!-- Trigger the Modal -->
-                    <img class="imgModal" id="myImg" src="{{ asset(file.path) }}" alt="{{ file.name }}"
-                         style="width:100%;max-width:300px">
                     <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
                     <!-- The Modal -->
                     <div id="myModal" class="modal">
@@ -45,8 +47,6 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btnModal btn btn-primary text-center" alt="{{ file.name }}">Voir pièce jointe
-            </button>
 
         </div>
         <div class="row bootstrap snippets justify-content-center">

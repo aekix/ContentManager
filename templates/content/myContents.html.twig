@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
                         {% for content in reviewContents %}
-                            <tr class="publishedContent" id="{{ content.id }}">
+                            <tr class="waitingContent" id="{{ content.id }}">
                                 <td style="height: 3vw">{{ content.title }}</td>
                                 <td>{{ content.publicationDate|date('d M yy', 'Europe/Paris') }}</td>
                                 <td>{{ content.category.label }}</td>
@@ -91,7 +91,7 @@
                         </thead>
                         <tbody>
                         {% for content in draftContents %}
-                            <tr class="publishedContent" id="{{ content.id }}">
+                            <tr class="draftContent" id="{{ content.id }}">
                                 <td style="height: 3vw">{{ content.title }}</td>
                                 <td>{{ content.publicationDate|date('d M yy', 'Europe/Paris') }}</td>
                                 <td>{{ content.category.label }}</td>

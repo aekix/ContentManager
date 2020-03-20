@@ -259,5 +259,66 @@ class ContentController extends AbstractFOSRestController
         ]);
     }
 
+    /**
+     * @Route("/edi{id}", name="edit")
+     */
+    public function edit(Content $content, Request $request)
+    {
+        $form = $this->createForm(EditContentType::class, $content);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $content->setTitle($data->getTitle());
+            $content->setText($data->getText());
+            $content->setCategory($data->getCategory());
+            $this->em->persist($content);
+            $this->em->flush();
+            $this->get('session')->getFlashBag()->add(
+                'message',
+                'Modifications enregistrées'
+            );
+        }
+        return $this->render('admin/content/edit.html.twig', [
+            'form' => $form->createView(),
+            'action' => 'Modifier',
+            'content' => $content,
+        ]);
+    }
+
+    /**
+     * @Route("/create/{id}", name="draft")
+     */
+    public function draft(Content $content, Request $request, ValidatorInterface $validator, FileService $fileService, FileRepository $fileRepository)
+    {
+        $form = $this->createForm(NewContentType::class, $content);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $content->setCategory($data->getCategory());
+            $form->get('save')->isClicked() ? $content->setStatus(0):  $content->setStatus(1);
+            $this->em->persist($content);
+            if ($form->get('pj')->getData()){
+                $file = $fileRepository->findOneBy(['content' => $content->getId()]);
+                if ($file) {
+                    $pj = $file;
+                }
+                else {
+                    $pj = new File();
+                }
+                $pj->setFile($form->get('pj')->getData());
+                $pj = $fileService->upload($pj);
+                $pj->setContent($content);
+                $this->em->persist($pj);
+            }
+            $this->em->flush();
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('content/newContent.html.twig', [
+            'form' => $form->createView(),
+            'action' => 'Rediger'
+        ]);
+    }
 }

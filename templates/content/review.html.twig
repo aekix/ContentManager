@@ -28,6 +28,8 @@
             <div class="col-xl-10 col-lg-12">
                 {{ include('content/_edit.html.twig') }}
             </div>
+            {% if is_granted('ROLE_ASC') %}
+
             <div class="col-xl-2 col-lg-2">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -49,6 +51,7 @@
                     <button type="button" class="btn btn-danger refuse">Décliner</button>
                     <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
                 </div>
+                {% if is_granted('ROLE_PUBLISHER') %}
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Publication</h6>
@@ -58,7 +61,10 @@
                         <button type="button" class="btn btn-danger refuser" name="refuser" data-toggle="modal" data-target="#refuserModal">Refuser</button>
                     <input type="hidden" id="idContent" name="idContent" value="{{ content.id }}">
                 </div>
+                {% endif %}
             </div>
+            {% endif %}
+
         </div>
         <!-- Publication Modal-->
         <div class="modal fade" id="refuserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
