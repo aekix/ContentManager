@@ -31,7 +31,7 @@
         "bootstrap": "4.3.1",
         "bootstrap4-toggle": "^3.6.1",
         "chart.js": "2.8.0",
-        "datatables.net": "^1.10.20",
+        "datatables.net": "^1.11.3",
         "datatables.net-bs4": "1.10.19",
         "datatables.net-dt": "^1.10.20",
         "gulp-rename": "^2.0.0",
